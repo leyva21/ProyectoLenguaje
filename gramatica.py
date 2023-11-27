@@ -38,6 +38,20 @@ grammar_rules = [
 ]
 
 def validar_declaracion(declaracion):
+    stack = []
+    for char in declaracion:
+        if char in "({[":
+            stack.append(char)
+        elif char in ")}]":
+            if not stack:
+                return "Error en la declaración. Paréntesis/Corchetes/Llaves no balanceados."
+            top = stack.pop()
+            if (char == ')' and top != '(') or (char == '}' and top != '{') or (char == ']' and top != '['):
+                return "Error en la declaración. Paréntesis/Corchetes/Llaves no coinciden."
+
+    if stack:
+        return "Error en la declaración. Paréntesis/Corchetes/Llaves no balanceados."
+    
     for pattern, regla in grammar_rules:
         if re.match(pattern, declaracion):
             return regla + " válida."
